@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма с использованием Cookie</title>
+</head>
+<body>
+<form id="selectionForm">
+    <label for="city">Город:</label>
+    <select id="city" name="city" onchange="updateWorkshops()">
+        <option value="Москва">Москва</option>
+        <option value="Санкт-Петербург">Санкт-Петербург</option>
+        <option value="Новосибирск">Новосибирск</option>
+    </select><br>
+
+    <label for="workshop">Цех:</label>
+    <select id="workshop" name="workshop" onchange="updateEmployees()">
+    </select><br>
+
+    <label for="employee">Сотрудник:</label>
+    <select id="employee" name="employee">
+    </select><br>
+
+    <label for="team">Бригада:</label>
+    <select id="team" name="team">
+        <option value="Бригада 1">Бригада 1</option>
+        <option value="Бригада 2">Бригада 2</option>
+        <option value="Бригада 3">Бригада 3</option>
+    </select><br>
+
+    <label for="shift">Смена:</label>
+    <select id="shift" name="shift">
+        <option value="Смена 1">Смена 1</option>
+        <option value="Смена 2">Смена 2</option>
+        <option value="Смена 3">Смена 3</option>
+    </select><br>
+
+    <button type="button" onclick="saveToCookie()">Сохранить</button>
+</form>
+
+<script>
+    const workshops = {
+        "Москва": ["Цех 1", "Цех 2", "Цех 3"],
+        "Санкт-Петербург": ["Цех 4", "Цех 5", "Цех 6"],
+        "Новосибирск": ["Цех 7", "Цех 8", "Цех 9"]
+    };
+
+    const employees = {
+        "Цех 1": ["Иванов", "Петров", "Сидоров"],
+        "Цех 2": ["Кузнецов", "Смирнов", "Васильев"],
+        "Цех 3": ["Попов", "Морозов", "Новиков"],
+        "Цех 4": ["Крылов", "Лебедев", "Михайлов"],
+        "Цех 5": ["Александров", "Федоров", "Семенов"],
+        "Цех 6": ["Волков", "Егоров", "Матвеев"],
+        "Цех 7": ["Григорьев", "Николаев", "Павлов"],
+        "Цех 8": ["Макаров", "Дмитриев", "Зайцев"],
+        "Цех 9": ["Сорокин", "Поляков", "Борисов"]
+    };
+
+    function updateWorkshops() {
+        const city = document.getElementById("city").value;
+        const workshopSelect = document.getElementById("workshop");
+        workshopSelect.innerHTML = "";
+
+        workshops[city].forEach(workshop => {
+            const option = document.createElement("option");
+            option.value = workshop;
+            option.text = workshop;
+            workshopSelect.add(option);
+        });
+
+        updateEmployees();
+    }
+
+    function updateEmployees() {
+        const workshop = document.getElementById("workshop").value;
+        const employeeSelect = document.getElementById("employee");
+        employeeSelect.innerHTML = "";
+
+        employees[workshop].forEach(employee => {
+            const option = document.createElement("option");
+            option.value = employee;
+            option.text = employee;
+            employeeSelect.add(option);
+        });
+    }
+
+    function saveToCookie() {
+        const formData = {
+            city: document.getElementById("city").value,
+            workshop: document.getElementById("workshop").value,
+            employee: document.getElementById("employee").value,
+            team: document.getElementById("team").value,
+            shift: document.getElementById("shift").value
+        };
+
+        document.cookie = "formData=" + JSON.stringify(formData) + "; path=/";
+        alert("Данные сохранены в Cookie");
+    }
+
+    window.onload = updateWorkshops;
+</script>
+</body>
+</html>

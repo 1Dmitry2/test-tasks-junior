@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js Форма с использованием Cookie</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <form @submit.prevent="saveToCookie">
+        <label for="city">Город:</label>
+        <select id="city" v-model="selectedCity" @change="updateWorkshops">
+            <option v-for="city in Object.keys(workshops)" :key="city" :value="city">{{ city }}</option>
+        </select><br>
+
+        <label for="workshop">Цех:</label>
+        <select id="workshop" v-model="selectedWorkshop" @change="updateEmployees">
+            <option v-for="workshop in filteredWorkshops" :key="workshop" :value="workshop">{{ workshop }}</option>
+        </select><br>
+
+        <label for="employee">Сотрудник:</label>
+        <select id="employee" v-model="selectedEmployee">
+            <option v-for="employee in filteredEmployees" :key="employee" :value="employee">{{ employee }}</option>
+        </select><br>
+
+        <label for="team">Бригада:</label>
+        <select id="team" v-model="selectedTeam">
+            <option v-for="team in teams" :key="team" :value="team">{{ team }}</option>
+        </select><br>
+
+        <label for="shift">Смена:</label>
+        <select id="shift" v-model="selectedShift">
+            <option v-for="shift in shifts" :key="shift" :value="shift">{{ shift }}</option>
+        </select><br>
+
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            selectedCity: '',
+            selectedWorkshop: '',
+            selectedEmployee: '',
+            selectedTeam: '',
+            selectedShift: '',
+            workshops: {
+                "Москва": ["Цех 1", "Цех 2", "Цех 3"],
+                "Санкт-Петербург": ["Цех 4", "Цех 5", "Цех 6"],
+                "Новосибирск": ["Цех 7", "Цех 8", "Цех 9"]
+            },
+            employees: {
+                "Цех 1": ["Иванов", "Петров", "Сидоров"],
+                "Цех 2": ["Кузнецов", "Смирнов", "Васильев"],
+                "Цех 3": ["Попов", "Морозов", "Новиков"],
+                "Цех 4": ["Крылов", "Лебедев", "Михайлов"],
+                "Цех 5": ["Александров", "Федоров", "Семенов"],
+                "Цех 6": ["Волков", "Егоров", "Матвеев"],
+                "Цех 7": ["Григорьев", "Николаев", "Павлов"],
+                "Цех 8": ["Макаров", "Дмитриев", "Зайцев"],
+                "Цех 9": ["Сорокин", "Поляков", "Борисов"]
+            },
+            teams: ["Бригада 1", "Бригада 2", "Бригада 3"],
+            shifts: ["Смена 1", "Смена 2", "Смена 3"]
+        },
+        computed: {
+            filteredWorkshops() {
+                return this.workshops[this.selectedCity] || [];
+            },
+            filteredEmployees() {
+                return this.employees[this.selectedWorkshop] || [];
+            }
+        },
+        methods: {
+            updateWorkshops() {
+                this.selectedWorkshop = '';
+                this.selectedEmployee = '';
+            },
+            updateEmployees() {
+                this.selectedEmployee = '';
+            },
+            saveToCookie() {
+                const formData = {
+                    city: this.selectedCity,
+                    workshop: this.selectedWorkshop,
+                    employee: this.selectedEmployee,
+                    team: this.selectedTeam,
+                    shift: this.selectedShift
+                };
+                document.cookie = "formData=" + JSON.stringify(formData) + "; path=/";
+                alert("Данные сохранены в Cookie");
+            }
+        }
+    });
+</script>
+</body>
+</html>
